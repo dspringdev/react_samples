@@ -1,28 +1,43 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+function App(props) {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  function handleFirstNameChange(e) {
+    setFirstName(e.target.value);
   }
+
+  function handleLastNameChange(e) {
+    setLastName(e.target.value);
+  }
+
+  return (
+    <React.Fragment>
+      <div>
+        First Name: <br />
+        <input
+          type="text"
+          name="firstName"
+          value={firstName}
+          onChange={handleFirstNameChange}
+        />
+        <br />
+        <h4>{firstName}</h4>
+        <br />
+        Last Name: <br />
+        <input
+          type="text"
+          name="lastName"
+          value={lastName}
+          onChange={handleLastNameChange}
+        />
+        <br />
+        <h4>{lastName}</h4>
+      </div>
+    </React.Fragment>
+  );
 }
 
 export default App;
