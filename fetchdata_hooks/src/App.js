@@ -5,20 +5,23 @@ import "./App.css";
 function App(props) {
   const [data, setData] = useState({ hits: [] });
   const [query, setQuery] = useState("redux");
-  const [search, setSearch] = useState("");
+  const [url, setUrl] = useState(
+    "http://hn.algolia.com/api/v1/search?query=redux"
+  );
+  const [isLoading, setIsLoading] = useState("false");
 
   useEffect(() => {
     // Must use async inside of useEffect
     const fetchData = async () => {
-      const result = await axios(
-        `http://hn.algolia.com/api/v1/search?query=${search}`
-      );
+      setIsLoading(true);
+      const result = await axios(url);
 
       setData(result.data);
+      setIsLoading(false);
     };
 
     fetchData();
-  }, [search]); // Fetching data on mount and whenever search changes.
+  }, [url]); // Fetching data on mount and whenever search changes.
 
   return (
     <Fragment>
@@ -27,16 +30,25 @@ function App(props) {
         value={query}
         onChange={e => setQuery(e.target.value)}
       />
-      <button type="button" onClick={() => setSearch(query)}>
+      <button
+        type="button"
+        onClick={() =>
+          setUrl(`http://hn.algolia.com/api/v1/search?query=${query}`)
+        }
+      >
         Search
       </button>
-      <ul>
-        {data.hits.map(item => (
-          <li key={item.objectID}>
-            <a href={item.url}>{item.title}</a>
-          </li>
-        ))}
-      </ul>
+      {isLoading ? (
+        <div>Loading ...</div>
+      ) : (
+        <ul>
+          {data.hits.map(item => (
+            <li key={item.objectID}>
+              <a href={item.url}>{item.title}</a>
+            </li>
+          ))}
+        </ul>
+      )}
     </Fragment>
   );
 }
