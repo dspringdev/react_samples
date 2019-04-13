@@ -8,15 +8,25 @@ function App(props) {
   const [url, setUrl] = useState(
     "http://hn.algolia.com/api/v1/search?query=redux"
   );
-  const [isLoading, setIsLoading] = useState("false");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     // Must use async inside of useEffect
     const fetchData = async () => {
+      setIsError(false);
       setIsLoading(true);
-      const result = await axios(url);
 
-      setData(result.data);
+      // try to get data via async / await
+      // catch if error
+      try {
+        const result = await axios(url);
+
+        setData(result.data);
+      } catch (error) {
+        setIsError(true);
+      }
+
       setIsLoading(false);
     };
 
@@ -38,6 +48,7 @@ function App(props) {
       >
         Search
       </button>
+      {isError && <div>Something went wrong trying to get data ...</div>}
       {isLoading ? (
         <div>Loading ...</div>
       ) : (
