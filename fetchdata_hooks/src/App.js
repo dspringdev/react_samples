@@ -1,25 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import "./App.css";
 
 function App(props) {
   const [data, setData] = useState({ hits: [] });
+  const [query, setQuery] = useState("redux");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     // Must use async inside of useEffect
     const fetchData = async () => {
       const result = await axios(
-        "http://hn.algolia.com/api/v1/search?query=redux"
+        `http://hn.algolia.com/api/v1/search?query=${search}`
       );
-      console.log(result);
+
       setData(result.data);
     };
 
     fetchData();
-  }, []); // Use empty array here to fetch data only on mounting
+  }, [search]); // Fetching data on mount and whenever search changes.
 
   return (
-    <React.Fragment>
+    <Fragment>
+      <input
+        type="text"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+      />
+      <button type="button" onClick={() => setSearch(query)}>
+        Search
+      </button>
       <ul>
         {data.hits.map(item => (
           <li key={item.objectID}>
@@ -27,7 +37,7 @@ function App(props) {
           </li>
         ))}
       </ul>
-    </React.Fragment>
+    </Fragment>
   );
 }
 
