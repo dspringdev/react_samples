@@ -33,21 +33,25 @@ function App(props) {
     fetchData();
   }, [url]); // Fetching data on mount and whenever search changes.
 
+  const doFetch = () => {
+    setUrl(`http://hn.algolia.com/api/v1/search?query=${query}`);
+  };
+
   return (
     <Fragment>
-      <input
-        type="text"
-        value={query}
-        onChange={e => setQuery(e.target.value)}
-      />
-      <button
-        type="button"
-        onClick={() =>
-          setUrl(`http://hn.algolia.com/api/v1/search?query=${query}`)
-        }
+      <form
+        onSubmit={event => {
+          doFetch();
+          event.preventDefault();
+        }}
       >
-        Search
-      </button>
+        <input
+          type="text"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
       {isError && <div>Something went wrong trying to get data ...</div>}
       {isLoading ? (
         <div>Loading ...</div>
